@@ -1,0 +1,72 @@
+<style>
+    body {
+        font-size: 30px;
+        font-family: 'Arial';
+    }
+    .active:visited:hover {
+        color: red;
+    }
+    a {
+        color: black;
+    }
+    li {
+        list-style-type: none;
+    }
+</style>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+<ul>
+
+    {% for item in menu_items %}
+        {% if not item.parent %}
+
+            <li>
+
+                <details close>
+                <summary><a href="{% url item.url %}" class="{% if request.path == item.url %}active{% endif %}">
+                    {{ item.title }}
+                </a>
+
+                {% if item.children.exists %}
+                    <ul>
+                        {% for child in item.children.all %}
+                            <li>
+                                <a href="{% url child.url %}" class="{% if request.path == child.url %}active{% endif %}">
+                                    {{ child.title }}
+                                </a>
+                </summary>
+
+                                {% if child.children.exists %}
+                                    <ul>
+                                        {% for subchild in child.children.all %}
+                                            <li>
+                                                <a href="{% url subchild.url %}" class="{% if request.path == subchild.url %}active{% endif %}">
+                                                    {{ subchild.title }}
+                                                </a>
+
+                                                {% if subchild.children.exists %}
+                                                    <ul>
+                                                        {% for subsubchild in subchild.children.all %}
+                                                            <li>
+                                                                <a href="{% url subsubchild.url %}" class="{% if request.path == subsubchild.url %}active{% endif %}">
+                                                                    {{ subsubchild.title }}
+                                                                </a>
+                                                            </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                {% endif %}
+
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </li></details>
+        {% endif %}
+    {% endfor %}
+</ul>
